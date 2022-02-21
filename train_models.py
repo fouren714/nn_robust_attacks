@@ -10,7 +10,7 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Conv2D, MaxPooling2D
-from keras.optimizers import SGD
+from tensorlflow.keras.optimizers import SGD
 
 import tensorflow as tf
 from setup_mnist import MNIST
@@ -59,10 +59,14 @@ def train(data, file_name, params, num_epochs=50, batch_size=128, train_temp=1, 
                   optimizer=sgd,
                   metrics=['accuracy'])
     
+    from keras.callbacks import EarlyStopping
+    early_stopping = EarlyStopping(monitor='val_loss', patience=4, mode='auto')
+    
     model.fit(data.train_data, data.train_labels,
               batch_size=batch_size,
               validation_data=(data.validation_data, data.validation_labels),
-              nb_epoch=num_epochs,
+              epochs=num_epochs,
+              callbacks = [early_stopping],
               shuffle=True)
     
 
